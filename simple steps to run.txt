@@ -1,0 +1,13 @@
+cd D:\StudyBuddy        (open powershell from this path)
+
+python -m venv venv
+
+.\venv\Scripts\Activate.ps1
+
+python -m pip install --upgrade pip
+
+python -m pip install -r requirements.txt
+
+$env:GEMINI_API_KEY="THEIR_GEMINI_API_KEY"
+
+streamlit run app.py
