@@ -123,8 +123,7 @@ def init_db():
 
     conn.commit()
     conn.close()
-    conn.commit()
-    conn.close()
+    
 
 
 def create_user(name, email, password, role="student"):
