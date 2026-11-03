@@ -106,7 +106,7 @@ def init_db():
     if "stored_path" not in document_columns:
         cur.execute("ALTER TABLE documents ADD COLUMN stored_path TEXT")
 
-       cur.execute(
+    cur.execute(
         """
         INSERT OR IGNORE INTO users
         (name, email, password_hash, role, created_at)
