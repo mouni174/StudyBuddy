@@ -106,20 +106,23 @@ def init_db():
     if "stored_path" not in document_columns:
         cur.execute("ALTER TABLE documents ADD COLUMN stored_path TEXT")
 
-    existing = cur.execute(
-        "SELECT id FROM users WHERE email=?",
-        ("admin@studybuddy.local",)
-    ).fetchone()
-
-    if not existing:
-        cur.execute(
-            """
-            INSERT INTO users(name,email,password_hash,role,created_at)
-            VALUES(?,?,?,?,?)
-            """,
-            ("Administrator", "admin@studybuddy.local", hash_password("Admin@123"), "admin", now())
+       cur.execute(
+        """
+        INSERT OR IGNORE INTO users
+        (name, email, password_hash, role, created_at)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            "Administrator",
+            "admin@studybuddy.local",
+            hash_password("Admin@123"),
+            "admin",
+            now()
         )
+    )
 
+    conn.commit()
+    conn.close()
     conn.commit()
     conn.close()
 
@@ -424,7 +427,7 @@ def login_page():
                 else:
                     st.error("Invalid admin email or password.")
 
-            st.info("Demo Admin: admin@studybuddy.local / Admin@123")
+           
 
         with register_tab:
             st.warning("For this college-project demo, admin registration is enabled. In a real deployment, administrator accounts should be created by an existing administrator.")
