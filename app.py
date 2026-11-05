@@ -372,126 +372,210 @@ NOTES:
 
 # ---------------- LOGIN ----------------
 
-def login_page():
+def apply_app_theme():
     st.markdown("""
     <style>
-    .login-title { text-align:center; font-size:40px; font-weight:800; margin-top:20px; margin-bottom:4px; }
-    .login-subtitle { text-align:center; color:#6b7280; margin-bottom:28px; }
-    .role-card { border:1px solid #e5e7eb; border-radius:14px; padding:22px; text-align:center; min-height:145px; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.04); margin-bottom:22px; }
-    .role-title { font-size:24px; font-weight:700; margin-bottom:6px; }
-    .role-text { color:#6b7280; font-size:15px; }
+    :root {
+        --sb-ink: #17233f;
+        --sb-muted: #68748e;
+        --sb-primary: #6558d9;
+        --sb-border: #e7e9f3;
+        --sb-surface: #ffffff;
+    }
+    .stApp {
+        background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 360px);
+        color: var(--sb-ink);
+    }
+    [data-testid="stMainBlockContainer"] {
+        max-width: 1240px;
+        padding-top: 2.25rem;
+        padding-bottom: 3rem;
+    }
+    [data-testid="stSidebar"] {
+        background: #f5f5ff;
+        border-right: 1px solid var(--sb-border);
+    }
+    [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+        color: var(--sb-muted);
+    }
+    h1, h2, h3, h4 {
+        color: var(--sb-ink);
+        letter-spacing: -0.025em;
+    }
+    h1 { font-weight: 750; }
+    [data-testid="stCaptionContainer"], .stCaption {
+        color: var(--sb-muted);
+    }
+    [data-testid="stMetric"] {
+        background: var(--sb-surface);
+        border: 1px solid var(--sb-border);
+        border-radius: 16px;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 5px 18px rgba(37, 45, 86, 0.045);
+    }
+    [data-testid="stMetricLabel"] {
+        color: var(--sb-muted);
+        font-weight: 550;
+    }
+    [data-testid="stMetricValue"] {
+        color: var(--sb-ink);
+        font-weight: 750;
+    }
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border-color: var(--sb-border);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 5px 18px rgba(37, 45, 86, 0.035);
+    }
+    [data-testid="stTabs"] [role="tab"] {
+        color: var(--sb-muted);
+        font-weight: 600;
+    }
+    [data-testid="stTabs"] [role="tab"][aria-selected="true"] {
+        color: var(--sb-primary);
+    }
+    [data-testid="stTextInput"] input,
+    [data-testid="stTextArea"] textarea,
+    [data-testid="stSelectbox"] [data-baseweb="select"] > div,
+    [data-testid="stNumberInput"] input {
+        border-radius: 10px;
+    }
+    div[data-testid="stButton"] > button,
+    div[data-testid="stFormSubmitButton"] > button,
+    div[data-testid="stDownloadButton"] > button {
+        min-height: 2.65rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: border-color 120ms ease, background-color 120ms ease;
+    }
+    div[data-testid="stButton"] > button:hover,
+    div[data-testid="stDownloadButton"] > button:hover {
+        border-color: var(--sb-primary);
+        color: var(--sb-primary);
+    }
+    [data-testid="stExpander"] {
+        border-color: var(--sb-border);
+        border-radius: 12px;
+        background: var(--sb-surface);
+    }
+    [data-testid="stChatMessage"] {
+        border: 1px solid var(--sb-border);
+        border-radius: 16px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.7rem;
+    }
+    @media (max-width: 640px) {
+        [data-testid="stMainBlockContainer"] {
+            padding: 1.1rem 1rem 2rem;
+        }
+        .stApp [data-testid="stHeadingWithActionElements"] h1 {
+            font-size: 1.8rem !important;
+            line-height: 1.2 !important;
+        }
+        .stApp [data-testid="stHeadingWithActionElements"] h2 {
+            font-size: 1.5rem !important;
+            line-height: 1.25 !important;
+        }
+        .stApp [data-testid="stHeadingWithActionElements"] h3 {
+            font-size: 1.25rem !important;
+            line-height: 1.3 !important;
+        }
+        [data-testid="stMetric"] {
+            padding: 0.8rem;
+        }
+        [data-testid="stTabs"] [role="tab"] {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+    }
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="login-title">🎓 StudyBuddy</div>', unsafe_allow_html=True)
-    st.markdown('<div class="login-subtitle">RAG Tutor for College Notes</div>', unsafe_allow_html=True)
+
+def login_page():
+    intro, auth = st.columns([1.05, 1.2], gap="large", vertical_alignment="center")
+    with intro:
+        with st.container(border=True):
+            st.markdown("## :material/school: StudyBuddy")
+            st.markdown("### A calmer way to study")
+            st.write(
+                "Your course notes, an AI study partner, and progress tools "
+                "together in one focused workspace."
+            )
+            st.divider()
+            st.markdown(":material/menu_book: **Learn from your materials**")
+            st.caption("Get grounded answers from your official course notes.")
+            st.markdown(":material/quiz: **Practice with purpose**")
+            st.caption("Build confidence with quizzes based on the topics you study.")
+            st.markdown(":material/insights: **See your progress**")
+            st.caption("Keep track of questions, quiz results, and study history.")
 
     if "auth_role" not in st.session_state:
         st.session_state.auth_role = "student"
 
-    role = st.radio(
-        "Select account type",
-        ["👨‍💼 Admin", "🎓 Student"],
-        horizontal=True,
-        label_visibility="collapsed",
-        index=0 if st.session_state.auth_role == "admin" else 1,
-    )
+    with auth:
+        with st.container(border=True):
+            st.markdown("### Welcome back")
+            st.caption("Sign in to continue to your StudyBuddy workspace.")
+            role = st.radio(
+                "Account type",
+                ["Student", "Admin"],
+                horizontal=True,
+                index=0 if st.session_state.auth_role == "student" else 1,
+            )
 
-    selected_role = "admin" if role.startswith("👨‍💼") else "student"
+    selected_role = "admin" if role == "Admin" else "student"
     st.session_state.auth_role = selected_role
 
-    if selected_role == "admin":
-        st.markdown("""
-        <div class="role-card">
-            <div class="role-title">👨‍💼 Administrator</div>
-            <div class="role-text">Manage students, subjects, official notes and platform activity.</div>
-        </div>
-        """, unsafe_allow_html=True)
+    role_label = "Admin" if selected_role == "admin" else "Student"
+    login_tab, register_tab = st.tabs(
+        [f":material/login: {role_label} login", f":material/person_add: {role_label} registration"]
+    )
 
-        login_tab, register_tab = st.tabs(["🔐 Admin Login", "📝 Admin Registration"])
+    with login_tab:
+        with st.form(f"{selected_role}_login"):
+            email = st.text_input(f"{role_label} email", placeholder=f"{role_label.lower()}@example.com")
+            password = st.text_input("Password", type="password")
+            submitted = st.form_submit_button(
+                f"Sign in as {role_label}", width="stretch", type="primary"
+            )
 
-        with login_tab:
-            with st.form("admin_login"):
-                email = st.text_input("Admin Email", placeholder="admin@example.com")
-                password = st.text_input("Password", type="password")
-                submitted = st.form_submit_button("Login as Admin", use_container_width=True, type="primary")
+        if submitted:
+            user = authenticate(email, password)
+            if user and user["role"] == selected_role:
+                st.session_state.user = user
+                st.rerun()
+            elif user:
+                other_role = "Student" if selected_role == "admin" else "Admin"
+                st.error(f"This account is registered as {other_role}. Please select {other_role}.")
+            else:
+                st.error(f"Invalid {role_label.lower()} email or password.")
 
-            if submitted:
-                user = authenticate(email, password)
-                if user and user["role"] == "admin":
-                    st.session_state.user = user
-                    st.rerun()
-                elif user:
-                    st.error("This account is registered as a Student. Please select Student.")
-                else:
-                    st.error("Invalid admin email or password.")
+    with register_tab:
+        if selected_role == "admin":
+            st.warning(
+                "Admin registration is enabled for this demo. In a real deployment, "
+                "administrator accounts should be created by an existing administrator."
+            )
+        with st.form(f"{selected_role}_register"):
+            name = st.text_input("Full name")
+            email = st.text_input(f"{role_label} email")
+            password = st.text_input("Password", type="password")
+            confirm = st.text_input("Confirm password", type="password")
+            submitted = st.form_submit_button(
+                f"Create {role_label.lower()} account", width="stretch", type="primary"
+            )
 
-           
-
-        with register_tab:
-            st.warning("For this college-project demo, admin registration is enabled. In a real deployment, administrator accounts should be created by an existing administrator.")
-            with st.form("admin_register"):
-                name = st.text_input("Administrator Name")
-                email = st.text_input("Admin Email")
-                password = st.text_input("Password", type="password")
-                confirm = st.text_input("Confirm Password", type="password")
-                submitted = st.form_submit_button("Create Admin Account", use_container_width=True, type="primary")
-
-            if submitted:
-                if not name or not email or not password:
-                    st.error("Please fill all fields.")
-                elif password != confirm:
-                    st.error("Passwords do not match.")
-                elif len(password) < 6:
-                    st.error("Password must contain at least 6 characters.")
-                else:
-                    ok, msg = create_user(name, email, password, role="admin")
-                    (st.success if ok else st.error)(msg)
-
-    else:
-        st.markdown("""
-        <div class="role-card">
-            <div class="role-title">🎓 Student</div>
-            <div class="role-text">Learn from college notes, ask questions, take quizzes and track progress.</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        login_tab, register_tab = st.tabs(["🔐 Student Login", "📝 Student Registration"])
-
-        with login_tab:
-            with st.form("student_login"):
-                email = st.text_input("Student Email", placeholder="student@example.com")
-                password = st.text_input("Password", type="password")
-                submitted = st.form_submit_button("Login as Student", use_container_width=True, type="primary")
-
-            if submitted:
-                user = authenticate(email, password)
-                if user and user["role"] == "student":
-                    st.session_state.user = user
-                    st.rerun()
-                elif user:
-                    st.error("This account is registered as an Admin. Please select Admin.")
-                else:
-                    st.error("Invalid student email or password.")
-
-        with register_tab:
-            with st.form("student_register"):
-                name = st.text_input("Full Name")
-                email = st.text_input("Student Email")
-                password = st.text_input("Password", type="password")
-                confirm = st.text_input("Confirm Password", type="password")
-                submitted = st.form_submit_button("Create Student Account", use_container_width=True, type="primary")
-
-            if submitted:
-                if not name or not email or not password:
-                    st.error("Please fill all fields.")
-                elif password != confirm:
-                    st.error("Passwords do not match.")
-                elif len(password) < 6:
-                    st.error("Password must contain at least 6 characters.")
-                else:
-                    ok, msg = create_user(name, email, password, role="student")
-                    (st.success if ok else st.error)(msg)
+        if submitted:
+            if not name or not email or not password:
+                st.error("Please fill all fields.")
+            elif password != confirm:
+                st.error("Passwords do not match.")
+            elif len(password) < 6:
+                st.error("Password must contain at least 6 characters.")
+            else:
+                ok, msg = create_user(name, email, password, role=selected_role)
+                (st.success if ok else st.error)(msg)
 
 
 def get_subjects():
@@ -586,8 +670,9 @@ def delete_document(document_id):
 # ---------------- ADMIN DASHBOARD ----------------
 
 def admin_page(user):
-    st.title("👨‍💼 Admin Dashboard")
-    st.caption("Manage StudyBuddy content, students and platform activity.")
+    with st.container(border=True):
+        st.title(":material/admin_panel_settings: Admin dashboard")
+        st.caption("Manage your learning resources, students, and platform activity.")
 
     conn = db()
     students = conn.execute("SELECT COUNT(*) c FROM users WHERE role='student'").fetchone()["c"]
@@ -597,22 +682,27 @@ def admin_page(user):
     quiz_attempts = conn.execute("SELECT COUNT(*) c FROM quiz_results").fetchone()["c"]
     conn.close()
 
-    a, b, c, d, e = st.columns(5)
-    a.metric("Students", students)
-    b.metric("Subjects", subjects)
-    c.metric("Notes", notes)
-    d.metric("Questions", questions)
-    e.metric("Quiz Attempts", quiz_attempts)
+    metric_row_one = st.columns(3)
+    metric_row_one[0].metric("Students", students)
+    metric_row_one[1].metric("Subjects", subjects)
+    metric_row_one[2].metric("Study notes", notes)
+    metric_row_two = st.columns(2)
+    metric_row_two[0].metric("Questions asked", questions)
+    metric_row_two[1].metric("Quiz attempts", quiz_attempts)
 
     st.divider()
 
     tab1, tab2, tab3, tab4 = st.tabs([
-        "📚 Subjects", "📄 Notes", "👥 Users", "📊 Student Activity"
+        ":material/menu_book: Subjects",
+        ":material/description: Study notes",
+        ":material/group: Students",
+        ":material/insights: Activity"
     ])
 
     # Subjects
     with tab1:
-        st.subheader("Manage Subjects")
+        st.subheader("Manage subjects")
+        st.caption("Create and organize the subjects students can study.")
         with st.form("subject"):
             name = st.text_input("Subject name", placeholder="Example: Computer Networks")
             desc = st.text_area("Description", placeholder="Enter a short description.")
@@ -638,13 +728,14 @@ def admin_page(user):
 
         rows = get_subjects()
         if rows:
-            st.markdown("### Existing Subjects")
+            st.markdown("### Your subjects")
             for row in rows:
-                col1, col2, col3 = st.columns([2, 5, 1])
-                col1.write(f"**{row['name']}**")
-                col2.write(row["description"] or "No description")
-                if col3.button("Delete", key=f"delete_subject_{row['id']}"):
-                    st.session_state["delete_subject_id"] = row["id"]
+                with st.container(border=True):
+                    col1, col2, col3 = st.columns([2, 5, 1], vertical_alignment="center")
+                    col1.markdown(f"**{row['name']}**")
+                    col2.caption(row["description"] or "No description")
+                    if col3.button("Delete", key=f"delete_subject_{row['id']}"):
+                        st.session_state["delete_subject_id"] = row["id"]
 
             if "delete_subject_id" in st.session_state:
                 subject_id = st.session_state["delete_subject_id"]
@@ -665,7 +756,8 @@ def admin_page(user):
 
     # Notes
     with tab2:
-        st.subheader("Upload Official Study Notes")
+        st.subheader("Upload study notes")
+        st.caption("Add PDF, DOCX, or TXT course materials to the subject library.")
         rows = get_subjects()
         if not rows:
             st.warning("Create a subject before uploading notes.")
@@ -679,33 +771,34 @@ def admin_page(user):
             )
 
             if uploaded and st.button("Process & Index Notes", type="primary"):
-                for file in uploaded:
-                    safe_name = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}_{file.name}"
-                    path = UPLOAD_DIR / safe_name
-                    path.write_bytes(file.getbuffer())
-                    try:
-                        # Keep the uploaded file available for student downloads even if
-                        # this PDF has no selectable text for RAG indexing.
-                        chunks = index_document(path, file.name, subject_map[subject_name])
+                with st.spinner("Saving and indexing study notes..."):
+                    for file in uploaded:
+                        safe_name = f"{datetime.now().strftime('%Y%m%d%H%M%S%f')}_{file.name}"
+                        path = UPLOAD_DIR / safe_name
+                        path.write_bytes(file.getbuffer())
+                        try:
+                            # Keep the uploaded file available for student downloads even if
+                            # this PDF has no selectable text for RAG indexing.
+                            chunks = index_document(path, file.name, subject_map[subject_name])
 
-                        conn = db()
-                        conn.execute(
-                            "INSERT INTO documents(filename,subject_id,uploaded_by,uploaded_at,stored_path) VALUES(?,?,?,?,?)",
-                            (file.name, subject_map[subject_name], user["id"], now(), str(path.resolve()))
-                        )
-                        conn.commit()
-                        conn.close()
-
-                        if chunks == 0:
-                            st.warning(
-                                f"{file.name} was uploaded and is available to download, "
-                                "but no readable text was found for StudyBuddy Q&A. "
-                                "Scanned PDFs need OCR before their contents can be searched."
+                            conn = db()
+                            conn.execute(
+                                "INSERT INTO documents(filename,subject_id,uploaded_by,uploaded_at,stored_path) VALUES(?,?,?,?,?)",
+                                (file.name, subject_map[subject_name], user["id"], now(), str(path.resolve()))
                             )
-                        else:
-                            st.success(f"{file.name}: uploaded and indexed {chunks} chunks.")
-                    except Exception as e:
-                        st.error(f"{file.name}: {e}")
+                            conn.commit()
+                            conn.close()
+
+                            if chunks == 0:
+                                st.warning(
+                                    f"{file.name} was uploaded and is available to download, "
+                                    "but no readable text was found for StudyBuddy Q&A. "
+                                    "Scanned PDFs need OCR before their contents can be searched."
+                                )
+                            else:
+                                st.success(f"{file.name}: uploaded and indexed {chunks} chunks.")
+                        except Exception as e:
+                            st.error(f"{file.name}: {e}")
 
             conn = db()
             docs = conn.execute(
@@ -720,15 +813,18 @@ def admin_page(user):
             conn.close()
 
             if docs:
-                st.markdown("### Uploaded Notes")
+                st.markdown("### Uploaded notes")
                 for doc in docs:
-                    col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 2, 1])
-                    col1.write(f"📄 **{doc['filename']}**")
-                    col2.write(doc["subject"])
-                    col3.write(doc["uploaded_at"])
-                    col4.write(doc["uploaded_by"] or "Unknown")
-                    if col5.button("Delete", key=f"delete_doc_{doc['id']}"):
-                        st.session_state["delete_doc_id"] = doc["id"]
+                    with st.container(border=True):
+                        col1, col2, col3, col4, col5 = st.columns(
+                            [3, 2, 2, 2, 1], vertical_alignment="center"
+                        )
+                        col1.markdown(f"**{doc['filename']}**")
+                        col2.caption(doc["subject"])
+                        col3.caption(doc["uploaded_at"])
+                        col4.caption(doc["uploaded_by"] or "Unknown")
+                        if col5.button("Delete", key=f"delete_doc_{doc['id']}"):
+                            st.session_state["delete_doc_id"] = doc["id"]
 
                 if "delete_doc_id" in st.session_state:
                     doc_id = st.session_state["delete_doc_id"]
@@ -749,7 +845,8 @@ def admin_page(user):
 
     # Users
     with tab3:
-        st.subheader("Manage Students")
+        st.subheader("Manage students")
+        st.caption("Review account activity and manage student access.")
         conn = db()
         rows = conn.execute(
             """
@@ -784,16 +881,20 @@ def admin_page(user):
                 })
             st.dataframe(table_data, use_container_width=True, hide_index=True)
 
-            st.markdown("### Student Actions")
+            st.markdown("### Student actions")
             student_map = {f"{r['name']} — {r['email']}": r["id"] for r in rows}
             selected_student = st.selectbox("Select a student", list(student_map), key="admin_selected_student")
             selected_student_id = student_map[selected_student]
 
             action_col1, action_col2 = st.columns(2)
-            if action_col1.button("📊 View Student Activity", use_container_width=True):
+            if action_col1.button(
+                ":material/insights: View student activity", width="stretch"
+            ):
                 st.session_state["activity_student_id"] = selected_student_id
-                st.info("Open the 'Student Activity' tab to view this student's questions and quiz performance.")
-            if action_col2.button("🗑️ Delete Student", use_container_width=True):
+                st.info("Open the 'Activity' tab to view this student's questions and quiz performance.")
+            if action_col2.button(
+                ":material/person_remove: Delete student", width="stretch"
+            ):
                 st.session_state["delete_user_id"] = selected_student_id
 
             if "delete_user_id" in st.session_state:
@@ -815,7 +916,7 @@ def admin_page(user):
 
     # Student Activity
     with tab4:
-        st.subheader("📊 Student Activity & Performance")
+        st.subheader("Student activity and performance")
         conn = db()
         student_rows = conn.execute(
             "SELECT id, name, email FROM users WHERE role='student' ORDER BY name"
@@ -884,7 +985,7 @@ def admin_page(user):
             conn.close()
 
             if student:
-                st.markdown(f"### 👤 {student['name']}")
+                st.markdown(f"### :material/person: {student['name']}")
                 st.caption(f"Email: {student['email']} | Registered: {student['created_at']}")
                 x, y, z, w = st.columns(4)
                 x.metric("Questions Asked", question_count)
@@ -896,7 +997,7 @@ def admin_page(user):
                 )
 
             st.divider()
-            st.markdown("### 💬 Questions Asked")
+            st.markdown("### :material/chat: Questions asked")
             if question_rows:
                 for row in question_rows:
                     subject = row["subject"] or "Unknown Subject"
@@ -908,7 +1009,7 @@ def admin_page(user):
             else:
                 st.info("This student has not asked any questions yet.")
 
-            st.markdown("### 📝 Quiz Performance")
+            st.markdown("### :material/quiz: Quiz performance")
             if quiz_rows:
                 quiz_table = []
                 for row in quiz_rows:
@@ -926,95 +1027,130 @@ def admin_page(user):
 # ---------------- STUDENT DASHBOARD ----------------
 
 def student_page(user):
-    # Polished, responsive styling for the student workspace.
-    st.markdown(
-        """
-        <style>
-        .stApp { background: linear-gradient(180deg, #f8faff 0%, #ffffff 42%); }
-        .sb-hero {
-            padding: 1.35rem 1.55rem; border-radius: 18px; margin-bottom: 1rem;
-            background: linear-gradient(120deg, #33256f 0%, #5b4acb 58%, #8274ee 100%);
-            color: white; box-shadow: 0 8px 24px rgba(60, 48, 130, .15);
-        }
-        .sb-hero h1 { color: white !important; margin: 0 0 .3rem 0; font-size: 2rem; }
-        .sb-hero p { color: #eeecff !important; margin: 0; font-size: 1rem; }
-        div[data-testid="stMetric"] {
-            background: white; padding: 15px 17px; border: 1px solid #e8eaf4;
-            border-radius: 14px; box-shadow: 0 3px 12px rgba(32, 40, 80, .04);
-        }
-        div.stButton > button, div.stDownloadButton > button {
-            border-radius: 10px; font-weight: 600; transition: all .15s ease;
-        }
-        div.stButton > button:hover, div.stDownloadButton > button:hover {
-            border-color: #6657d9; color: #5142bd; transform: translateY(-1px);
-        }
-        div[data-testid="stTabs"] button { font-weight: 600; }
-        div[data-testid="stExpander"] { border-radius: 12px; border-color: #e4e7f1; }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        f'<div class="sb-hero"><h1>🎓 Welcome, {user["name"]}</h1>'
-        '<p>Your personal study space — learn, practice, and track your progress.</p></div>',
-        unsafe_allow_html=True
-    )
+    with st.container(border=True):
+        st.title(f"Welcome, {user['name']}")
+        st.caption("Your study space to learn, practice, and track your progress.")
 
     subjects = get_subjects()
     if not subjects:
-        st.warning("No subjects or notes have been added by the administrator yet.")
+        st.info("Your study space is ready. Subjects and study notes will appear here when available.")
         return
 
     subject_map = {r["name"]: r["id"] for r in subjects}
-    subject_name = st.selectbox("Choose a subject", list(subject_map))
+    with st.container(border=True):
+        subject_name = st.selectbox("Choose a subject", list(subject_map))
+        subject_description = next(
+            (row["description"] for row in subjects if row["name"] == subject_name),
+            ""
+        )
+        st.caption(
+            subject_description
+            or "Ask questions and practice using the study notes for this subject."
+        )
     subject_id = subject_map[subject_name]
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "🤖 Ask StudyBuddy", "📥 Download Notes", "📝 Quiz", "📊 My Progress", "💬 History"
+        ":material/auto_awesome: Study assistant",
+        ":material/download: Study notes",
+        ":material/quiz: Practice quiz",
+        ":material/insights: My progress",
+        ":material/history: History"
     ])
 
     with tab1:
-        question = st.text_area(
-            "Ask a question from your notes",
-            placeholder="Example: Explain normalization with a simple example.",
-            height=120
-        )
+        with st.container(border=True):
+            st.subheader("Ask StudyBuddy")
+            st.caption(
+                f"Answers are grounded in the uploaded notes for **{subject_name}**."
+            )
 
-        if st.button("Ask StudyBuddy", type="primary"):
-            if not question.strip():
-                st.warning("Enter a question first.")
-            else:
-                with st.spinner("Searching your notes and generating an answer..."):
-                    answer, sources = generate_answer(question, subject_id)
+        conn = db()
+        conversation = conn.execute(
+            """
+            SELECT id, question, answer, created_at
+            FROM chat_history
+            WHERE user_id=? AND subject_id=?
+            ORDER BY id DESC LIMIT 50
+            """,
+            (user["id"], subject_id)
+        ).fetchall()
+        conn.close()
+        conversation = list(reversed(conversation))
+        source_key = f"chat_sources_{user['id']}_{subject_id}"
+        chat_sources = st.session_state.setdefault(source_key, {})
 
-                if answer is None:
-                    st.error("Unable to generate an answer.")
-                elif isinstance(answer, str) and (
-                    answer.startswith("GEMINI_API_KEY")
-                    or answer.startswith("Unable to generate")
-                    or answer.startswith("Gemini is temporarily")
-                    or answer.startswith("The selected Gemini")
-                ):
-                    st.error(answer)
-                else:
-                    st.markdown("### Answer")
-                    st.write(answer)
+        if not conversation:
+            st.info("Start a conversation by asking a question about your study notes.")
+        else:
+            for message in conversation:
+                with st.chat_message("user", avatar=":material/person:"):
+                    st.markdown(message["question"])
+                with st.chat_message("assistant", avatar=":material/auto_awesome:"):
+                    st.markdown(message["answer"])
+                    sources = chat_sources.get(message["id"], [])
                     if sources:
-                        st.markdown("### 📚 Sources")
-                        for filename, page in sources:
-                            st.write(f"- {filename} — Page {page}")
+                        with st.expander(f"Sources · {len(sources)}"):
+                            for filename, page in sources:
+                                st.caption(f":material/article: {filename} · Page {page}")
 
-                    conn = db()
-                    conn.execute(
-                        "INSERT INTO chat_history(user_id,subject_id,question,answer,created_at) VALUES(?,?,?,?,?)",
-                        (user["id"], subject_id, question, answer, now())
-                    )
-                    conn.commit()
-                    conn.close()
+        suggestion_columns = st.columns(3)
+        suggested_question = None
+        if suggestion_columns[0].button(
+            "Summarize key ideas", key=f"chat_suggest_summary_{subject_id}"
+        ):
+            suggested_question = f"Summarize the key ideas in {subject_name} from my notes."
+        if suggestion_columns[1].button(
+            "Explain a concept", key=f"chat_suggest_explain_{subject_id}"
+        ):
+            suggested_question = f"Explain an important concept from my {subject_name} notes."
+        if suggestion_columns[2].button(
+            "Review definitions", key=f"chat_suggest_definitions_{subject_id}"
+        ):
+            suggested_question = f"Review the important definitions in my {subject_name} notes."
+
+        question = st.chat_input(
+            "Ask a question about your study notes...",
+            key=f"chat_input_{subject_id}"
+        )
+        question = suggested_question or question
+
+        if question:
+            with st.spinner("Searching your notes and preparing an answer..."):
+                answer, sources = generate_answer(question, subject_id)
+
+            error_prefixes = (
+                "GEMINI_API_KEY",
+                "Unable to generate",
+                "Gemini is temporarily",
+                "The selected Gemini",
+                "Gemini API key is invalid",
+            )
+            if answer is None:
+                st.error(sources if isinstance(sources, str) else "Unable to generate an answer.")
+            elif isinstance(answer, str) and answer.startswith(error_prefixes):
+                st.error(answer)
+            else:
+                with st.chat_message("user", avatar=":material/person:"):
+                    st.markdown(question)
+                with st.chat_message("assistant", avatar=":material/auto_awesome:"):
+                    st.markdown(answer)
+                    if sources:
+                        with st.expander(f"Sources · {len(sources)}"):
+                            for filename, page in sources:
+                                st.caption(f":material/article: {filename} · Page {page}")
+
+                conn = db()
+                cursor = conn.execute(
+                    "INSERT INTO chat_history(user_id,subject_id,question,answer,created_at) VALUES(?,?,?,?,?)",
+                    (user["id"], subject_id, question, answer, now())
+                )
+                conn.commit()
+                chat_sources[cursor.lastrowid] = sources
+                conn.close()
 
     with tab2:
-        st.subheader("📥 Download Study Notes")
-        st.caption(f"Browse and download the official notes uploaded for **{subject_name}**.")
+        st.subheader("Your study notes")
+        st.caption(f"Browse and download the official materials for **{subject_name}**.")
 
         conn = db()
         note_rows = conn.execute(
@@ -1026,7 +1162,7 @@ def student_page(user):
         if not note_rows:
             st.info("No notes are available for this subject yet. Please check back later.")
         else:
-            st.success(f"{len(note_rows)} note file(s) available")
+            st.caption(f"{len(note_rows)} file(s) available")
             for note in note_rows:
                 file_name = note["filename"]
                 # Prefer the exact path saved with this database record.
@@ -1052,9 +1188,12 @@ def student_page(user):
                 with st.container(border=True):
                     note_col, date_col, action_col = st.columns([4, 2, 2], vertical_alignment="center")
                     suffix = Path(file_name).suffix.lower()
-                    icon = "📕" if suffix == ".pdf" else ("📝" if suffix == ".docx" else "📄")
-                    note_col.markdown(f"**{icon} {file_name}**")
-                    note_col.caption(f"Format: {suffix.lstrip('.').upper() or 'FILE'}")
+                    icon = (
+                        "picture_as_pdf" if suffix == ".pdf"
+                        else ("description" if suffix == ".docx" else "article")
+                    )
+                    note_col.markdown(f":material/{icon}: **{file_name}**")
+                    note_col.caption(f"{suffix.lstrip('.').upper() or 'FILE'} document")
                     date_col.caption("Uploaded")
                     date_col.write(note["uploaded_at"])
 
@@ -1067,7 +1206,7 @@ def student_page(user):
                             ".txt": "text/plain",
                         }.get(suffix, "application/octet-stream")
                         action_col.download_button(
-                            "⬇️ Download",
+                            ":material/download: Download",
                             data=file_path.read_bytes(),
                             file_name=file_name,
                             mime=mime,
@@ -1079,14 +1218,15 @@ def student_page(user):
                         st.caption("The note record exists, but its uploaded file could not be found on disk.")
 
     with tab3:
-        st.subheader("AI Quiz")
+        st.subheader("Practice with an AI quiz")
+        st.caption("Questions are generated from the study notes for this subject.")
         count = st.slider("Number of questions", 3, 10, 5)
         quiz_key = f"quiz_{subject_id}"
 
         if quiz_key not in st.session_state:
             st.session_state[quiz_key] = None
 
-        if st.button("Generate Quiz", type="primary"):
+        if st.button(":material/refresh: Generate quiz", type="primary"):
             with st.spinner("Generating quiz from your notes..."):
                 quiz, error = generate_quiz(subject_id, count)
             if error:
@@ -1099,14 +1239,18 @@ def student_page(user):
             answers = {}
             with st.form(f"quiz_form_{subject_id}"):
                 for i, q in enumerate(current_quiz):
-                    st.markdown(f"**Q{i+1}. {q['question']}**")
-                    answers[i] = st.radio(
-                        "Choose an answer",
-                        q["options"],
-                        key=f"quiz_{subject_id}_{i}",
-                        index=None
-                    )
-                submitted = st.form_submit_button("Submit Quiz")
+                    with st.container(border=True):
+                        st.markdown(f"**Question {i+1}**")
+                        st.write(q["question"])
+                        answers[i] = st.radio(
+                            "Choose an answer",
+                            q["options"],
+                            key=f"quiz_{subject_id}_{i}",
+                            index=None
+                        )
+                submitted = st.form_submit_button(
+                    ":material/check_circle: Submit quiz", type="primary"
+                )
 
             if submitted:
                 score = sum(
@@ -1114,7 +1258,12 @@ def student_page(user):
                     if answers[i] == q["options"][q["answer"]]
                 )
 
-                st.success(f"Score: {score}/{len(current_quiz)}")
+                score_col, total_col = st.columns(2)
+                score_col.metric("Your score", f"{score}/{len(current_quiz)}")
+                total_col.metric(
+                    "Result",
+                    f"{(score / len(current_quiz) * 100):.0f}%"
+                )
 
                 conn = db()
                 conn.execute(
@@ -1131,6 +1280,8 @@ def student_page(user):
                         )
 
     with tab4:
+        st.subheader("Your learning progress")
+        st.caption("A snapshot of your questions and quiz results.")
         conn = db()
         results = conn.execute(
             """
@@ -1148,18 +1299,20 @@ def student_page(user):
         conn.close()
 
         x, y = st.columns(2)
-        x.metric("Questions Asked", total_questions)
+        x.metric("Questions asked", total_questions)
         if results:
             valid_results = [r for r in results if r["total"] > 0]
             avg = sum((r["score"] / r["total"]) * 100 for r in valid_results) / len(valid_results) if valid_results else 0
-            y.metric("Average Quiz Score", f"{avg:.1f}%")
-            st.subheader("Quiz History")
+            y.metric("Average quiz score", f"{avg:.1f}%")
+            st.markdown("### Recent quiz results")
             st.dataframe([dict(r) for r in results], use_container_width=True, hide_index=True)
         else:
-            y.metric("Average Quiz Score", "—")
+            y.metric("Average quiz score", "—")
             st.info("Complete a quiz to see your progress.")
 
     with tab5:
+        st.subheader("Your study history")
+        st.caption("Review recent questions and answers from your study sessions.")
         conn = db()
         rows = conn.execute(
             """
@@ -1175,14 +1328,18 @@ def student_page(user):
         if not rows:
             st.info("No chat history yet.")
         for r in rows:
-            with st.expander(f"{r['created_at']} — {r['question']}"):
-                st.caption(f"Subject: {r['subject']}")
+            with st.expander(f"{r['created_at']} · {r['question']}"):
+                st.caption(f"Subject: {r['subject'] or 'Unknown subject'}")
+                st.markdown("**Your question**")
+                st.write(r["question"])
+                st.markdown("**StudyBuddy**")
                 st.write(r["answer"])
 
 # ---------------- MAIN ----------------
 
 def main():
     init_db()
+    apply_app_theme()
 
     if "user" not in st.session_state:
         login_page()
@@ -1191,12 +1348,12 @@ def main():
     user = st.session_state.user
 
     with st.sidebar:
-        st.title("🎓 StudyBuddy")
+        st.title(":material/school: StudyBuddy")
         st.write(f"**{user['name']}**")
-        st.caption(user["role"].upper())
+        st.caption(f"{user['role'].title()} workspace")
         st.divider()
 
-        if st.button("Logout", use_container_width=True):
+        if st.button(":material/logout: Log out", width="stretch"):
             del st.session_state["user"]
             st.rerun()
 
