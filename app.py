@@ -386,6 +386,21 @@ def apply_app_theme():
         background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 360px);
         color: var(--sb-ink);
     }
+    .st-key-login-shell {
+        max-width: 1040px;
+        width: 100%;
+        margin: 0 auto;
+        min-height: calc(100vh - 6rem);
+        justify-content: center;
+    }
+    .st-key-login-brand h1 {
+        font-size: 2.4rem;
+        line-height: 1.15;
+    }
+    .st-key-login-brand h2 {
+        font-size: 1.5rem;
+        line-height: 1.3;
+    }
     [data-testid="stMainBlockContainer"] {
         max-width: 1240px;
         padding-top: 2.25rem;
@@ -472,6 +487,10 @@ def apply_app_theme():
             font-size: 1.8rem !important;
             line-height: 1.2 !important;
         }
+        .stApp .st-key-login-brand [data-testid="stHeadingWithActionElements"] h1 {
+            font-size: 2.25rem !important;
+            line-height: 1.15 !important;
+        }
         .stApp [data-testid="stHeadingWithActionElements"] h2 {
             font-size: 1.5rem !important;
             line-height: 1.25 !important;
@@ -487,95 +506,114 @@ def apply_app_theme():
             padding-left: 0.5rem;
             padding-right: 0.5rem;
         }
+        .st-key-login-shell {
+            min-height: 0;
+            justify-content: flex-start;
+        }
+        .st-key-login-shell [data-testid="stHorizontalBlock"] {
+            gap: 1rem !important;
+        }
+        .st-key-login-brand-details {
+            display: none !important;
+        }
     }
     </style>
     """, unsafe_allow_html=True)
 
 
 def login_page():
-    intro, auth = st.columns([1.05, 1.2], gap="large", vertical_alignment="center")
-    with intro:
-        with st.container(border=True):
-            st.markdown("## :material/school: StudyBuddy")
-            st.markdown("### A calmer way to study")
-            st.write(
-                "Your course notes, an AI study partner, and progress tools "
-                "together in one focused workspace."
-            )
-            st.divider()
-            st.markdown(":material/menu_book: **Learn from your materials**")
-            st.caption("Get grounded answers from your official course notes.")
-            st.markdown(":material/quiz: **Practice with purpose**")
-            st.caption("Build confidence with quizzes based on the topics you study.")
-            st.markdown(":material/insights: **See your progress**")
-            st.caption("Keep track of questions, quiz results, and study history.")
+    with st.container(key="login-shell"):
+        intro, auth = st.columns([0.95, 1.05], gap="large", vertical_alignment="center")
+        with intro:
+            with st.container(border=True, key="login-brand"):
+                st.markdown("# :material/school: StudyBuddy")
+                st.markdown(
+                    "## AI-Powered Study Assistant Using Retrieval-Augmented Generation (RAG)"
+                )
+                with st.container(key="login-brand-details"):
+                    st.write(
+                        "Study confidently with answers grounded in your course materials, "
+                        "focused practice, and clear progress tracking."
+                    )
+                    st.divider()
+                    st.markdown(":material/menu_book: **Learn from your materials**")
+                    st.caption("Get grounded answers from your course notes.")
+                    st.markdown(":material/quiz: **Practice with purpose**")
+                    st.caption("Build confidence with quizzes based on what you study.")
 
-    if "auth_role" not in st.session_state:
-        st.session_state.auth_role = "student"
+        if "auth_role" not in st.session_state:
+            st.session_state.auth_role = "student"
 
-    with auth:
-        with st.container(border=True):
-            st.markdown("### Welcome back")
-            st.caption("Sign in to continue to your StudyBuddy workspace.")
-            role = st.radio(
-                "Account type",
-                ["Student", "Admin"],
-                horizontal=True,
-                index=0 if st.session_state.auth_role == "student" else 1,
-            )
+        with auth:
+            with st.container(border=True, key="login-card"):
+                st.markdown("### Welcome back")
+                st.caption("Sign in to continue to your StudyBuddy workspace.")
 
-    selected_role = "admin" if role == "Admin" else "student"
-    st.session_state.auth_role = selected_role
+                role = st.radio(
+                    "Account type",
+                    ["Student", "Admin"],
+                    horizontal=True,
+                    index=0 if st.session_state.auth_role == "student" else 1,
+                )
 
-    role_label = "Admin" if selected_role == "admin" else "Student"
-    login_tab, register_tab = st.tabs(
-        [f":material/login: {role_label} login", f":material/person_add: {role_label} registration"]
-    )
+                selected_role = "admin" if role == "Admin" else "student"
+                st.session_state.auth_role = selected_role
 
-    with login_tab:
-        with st.form(f"{selected_role}_login"):
-            email = st.text_input(f"{role_label} email", placeholder=f"{role_label.lower()}@example.com")
-            password = st.text_input("Password", type="password")
-            submitted = st.form_submit_button(
-                f"Sign in as {role_label}", width="stretch", type="primary"
-            )
+                role_label = "Admin" if selected_role == "admin" else "Student"
+                login_tab, register_tab = st.tabs(
+                    [
+                        f":material/login: {role_label} login",
+                        f":material/person_add: {role_label} registration",
+                    ]
+                )
 
-        if submitted:
-            user = authenticate(email, password)
-            if user and user["role"] == selected_role:
-                st.session_state.user = user
-                st.rerun()
-            elif user:
-                other_role = "Student" if selected_role == "admin" else "Admin"
-                st.error(f"This account is registered as {other_role}. Please select {other_role}.")
-            else:
-                st.error(f"Invalid {role_label.lower()} email or password.")
+                with login_tab:
+                    with st.form(f"{selected_role}_login"):
+                        email = st.text_input(
+                            f"{role_label} email",
+                            placeholder=f"{role_label.lower()}@example.com",
+                        )
+                        password = st.text_input("Password", type="password")
+                        submitted = st.form_submit_button(
+                            f"Sign in as {role_label}", width="stretch", type="primary"
+                        )
 
-    with register_tab:
-        if selected_role == "admin":
-            st.warning(
-                "Admin registration is enabled for this demo. In a real deployment, "
-                "administrator accounts should be created by an existing administrator."
-            )
-        with st.form(f"{selected_role}_register"):
-            name = st.text_input("Full name")
-            email = st.text_input(f"{role_label} email")
-            password = st.text_input("Password", type="password")
-            confirm = st.text_input("Confirm password", type="password")
-            submitted = st.form_submit_button(
-                f"Create {role_label.lower()} account", width="stretch", type="primary"
-            )
+                    if submitted:
+                        user = authenticate(email, password)
+                        if user and user["role"] == selected_role:
+                            st.session_state.user = user
+                            st.rerun()
+                        elif user:
+                            other_role = "Student" if selected_role == "admin" else "Admin"
+                            st.error(
+                                f"This account is registered as {other_role}. "
+                                f"Please select {other_role}."
+                            )
+                        else:
+                            st.error(f"Invalid {role_label.lower()} email or password.")
 
-        if submitted:
-            if not name or not email or not password:
-                st.error("Please fill all fields.")
-            elif password != confirm:
-                st.error("Passwords do not match.")
-            elif len(password) < 6:
-                st.error("Password must contain at least 6 characters.")
-            else:
-                ok, msg = create_user(name, email, password, role=selected_role)
-                (st.success if ok else st.error)(msg)
+                with register_tab:
+                    with st.form(f"{selected_role}_register"):
+                        name = st.text_input("Full name")
+                        email = st.text_input(f"{role_label} email")
+                        password = st.text_input("Password", type="password")
+                        confirm = st.text_input("Confirm password", type="password")
+                        submitted = st.form_submit_button(
+                            f"Create {role_label.lower()} account",
+                            width="stretch",
+                            type="primary",
+                        )
+
+                    if submitted:
+                        if not name or not email or not password:
+                            st.error("Please fill all fields.")
+                        elif password != confirm:
+                            st.error("Passwords do not match.")
+                        elif len(password) < 6:
+                            st.error("Password must contain at least 6 characters.")
+                        else:
+                            ok, msg = create_user(name, email, password, role=selected_role)
+                            (st.success if ok else st.error)(msg)
 
 
 def get_subjects():
